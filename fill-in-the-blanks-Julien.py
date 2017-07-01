@@ -9,15 +9,21 @@
 # This can be used as a study tool to help you remember important vocabulary!
 # Your game should consist of 3 or more levels, so you should add your own paragraphs as well!
 
+def updateText(textList, guessNum, guess):
+    for word in textList:
+        if str(guessNum) in word:
+            index = textList.index(word)
+            textList[index] = guess
+            return textList
 
 def selectDifficulty():
     welcomeMessage = "Please select a game difficulty by typing it in!\nPossible choices include easy, medium, and hard."
     print welcomeMessage
     difficultyChoices = ['easy','medium','hard']
-    
+
     #Selecting difficulty from user
     difficulty = raw_input()
-    
+
     #Verifying if user as selected a valid choice
     while difficulty not in difficultyChoices:
         print("That's not an option!")
@@ -38,56 +44,47 @@ def selectText(m):
     adding ___2___ separated by commas between the parentheses. ___1___s by default return ___3___ if you
     don't specify the value to return. ___2___ can be standard data types such as string, number, dictionary,
     tuple, and ___4___ or can be more complicated such as objects and lambda functions.'''
-    
+
     if m == 'easy':
         return easyText
-    
+
 def theGame():
     #Selecting the difficulty, the answer list and text, according to difficulty
-    mode = selectDifficulty()
-    listAnswer = answerList(mode)
-    text = selectText(mode)
+    mode, listAnswer, text = selectDifficulty(), answerList(mode), selectText(mode)
 
     #Spliting the text into a list and initializing variables for the game
     textList = text.split(" ")
-    numOfGuess = 5
-    guessNum = 1
-    
-    print("The current paragraph reads as such:")
-    print text
- 
+    numOfGuess, guessNum = 5, 1
+
+    print("The current paragraph reads as such:" + '\n' + text)
+
     #main bulk of the game where the player interacts and the text gets change accordingly with good answers
-    while numOfGuess > 0:      
+    while numOfGuess > 0:
         if guessNum > len(listAnswer):
             print('\nYou have won!')
             break
-        
+
         #Asking user input
         guess = raw_input('What should be substituted in for ' + '__' + str(guessNum) + '__' + '? ')
-        
+
         #Checking if the guess match in the answer list at the good index with GuessNum
         #Search for the token using guessNum variable in the textList
         #Get the token index in the list and swap the token by the answer
-        if guess == listAnswer[guessNum -1]:    
-            for word in textList:
-                if str(guessNum) in word:
-                    index = textList.index(word)
-                    textList[index] = guess
+        if guess == listAnswer[guessNum -1]:
+            textList = update(textList, guessNum, guess)
+            # for word in textList:
+            #     if str(guessNum) in word:
+            #         index = textList.index(word)
+            #         textList[index] = guess
             guessNum += 1
-            print '\nCorrect!' + '\n'*2
-            print("The current paragraph reads as such:")
-            print " ".join(textList)       
+            print('\nCorrect!' + '\n'*2 + "The current paragraph reads as such:" + '\n' + " ".join(textList) )
         else:
             numOfGuess -= 1
             if numOfGuess == 0:
                 break
             else:
-                print("That's isn't the correct answer! Let's try again; you have " + str(numOfGuess) + " trys left!" + "\n"*2)
-                print("The current paragraph reads as such:")
-                print " ".join(textList) + "\n"*2       
-    print("\nGame over")    
+                print("That's isn't the correct answer! Let's try again; you have " + str(numOfGuess) + " trys left!" + "\n"*2 + "The current paragraph reads as such:" + '\n' + " ".join(textList) + "\n"*2)
+    print("\nGame over")
 
 #Running the game
 theGame()
-    
-    
